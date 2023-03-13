@@ -284,7 +284,7 @@ ABdf %>% group_by(allocation) %>% summarise(mean(addtocart_flag), mean(transacti
 
 ![image](https://user-images.githubusercontent.com/14934475/224836603-0c750869-1598-4bf4-8a33-66025ffa48a6.png)
 
-Well, maybe not yet. But these are early promising signs. It looks like in all variables, the treatment is outperforming the control. This means that where Decco sent notifications offering a 10 euro discount for Lamps category app clickthrough sales. Here are some key trends:
+Well, maybe not yet. There are a lot more things to check. But these are early promising signs. It looks like in all variables, the treatment is outperforming the control. This means that where Decco sent notifications offering a 10 euro discount for Lamps category app clickthrough sales. Here are some key trends:
 
 >Cart-adding was around 24% in control and 28% in treatment
 
@@ -302,8 +302,58 @@ Reading the results, we can see that the p-value is really small, and the confid
 
 ![image](https://user-images.githubusercontent.com/14934475/224837879-2f5ab17f-5298-4e5f-b6bc-0098b76f1c6c.png)
 
+Those confidence intervals tell me that the treatment group performed between 6.9% and 7.8% better than the control group. Those are sales measurements. Let's examine the Add to Cart variable next.
 
-So we saw increases in sales, that's wonderful. However, I also want to compare to uninstalls to make sure the business isn't losing too many valuable customers.
+```
+prop.test(xtabs(~ allocation + addtocart_flag, data = df)[,2:1])
+```
+![image](https://user-images.githubusercontent.com/14934475/224838613-d72cd03c-4c92-40b3-b183-ae91332dff38.png)
+
+Reading results here, I can see once again that the p-value is very small (indicating significance) and the confidence interval does not contain zero. These results tell us that in terms of the Add to Cart behaviour, the treatment had a 3.6% to 4.7% effect.
+
+Next I'll check for differences in the means between the groups for the purchase value variable.
+
+```
+t.test(purchase_value ~ allocation, data = ABdf)
+```
+![image](https://user-images.githubusercontent.com/14934475/224839270-19d55a17-501f-4f00-a610-305d80b0b303.png)
+
+Again we have a small p-value, indicating significance, and a difference between means. Purchase value is also affected by the treatment.
+
+
+So we saw increases in sales and user interest behaviour; that's wonderful. However, I also want to compare to uninstalls to make sure the business isn't losing too many valuable customers. It's not a win if other unreconcilable losses are occurring. 
+
+## Uninstall Analysis 
+
+I'll check next for uninstall activity associated with treatment and control.
+
+```
+ABdf %>% group_by(allocation) %>% summarise(mean(uninstall_flag))
+```
+
+![image](https://user-images.githubusercontent.com/14934475/224839766-c0d979b3-7bc0-4c63-b0d3-530df2516e14.png)
+
+At a glance I can see that uninstalls are already quite a bit higher (~5% vs. 3%). I'll run additional tests to see if that number is too high. I'll check the statistical significance of those means differences.
+
+```
+prop.test(xtabs(~ allocation + uninstall_flag, data = ABdf)[,2:1])
+```
+
+![image](https://user-images.githubusercontent.com/14934475/224840063-d53f5f1e-969f-43fa-b16b-e51dfa55bb0a.png)
+
+That's a low p-value. It's not looking so good for the treatment, all of a sudden.
+
+**While the test is driving up percentage of purchases and purchase value, it is also driving up the uninstalls. And based on the guidance at the beginning, we have a constraint that we cannot have the uninstalls going up. Therefore, in this case we will not implement the change, even though the treatment outperformed the control for the respond variables.
+
+What I have done here as a data analyst is damage control and preventative advice: I have analysed the data to advise on the risk of implementing a proposed business strategy to the entire user base. Minimal setbacks have happened in terms of user retention and new strategies to drive Lamps sales can be formed based on these data insights.
+
+![image](https://user-images.githubusercontent.com/14934475/224841566-f3e89e33-d13c-4393-9d1c-404a8f7f25ba.png)
+
+This is the capstone project from a Udemy course by Preeta Semwal. While I have the foundational understanding in statistics, experimental design, and R programming to do the project without prior study, Preeta's design of this project is all her own. I highly recommend checking out her Udemy course if you are in need of the other fundamentals surrounding A/B testing or want to try the project on your own. Thanks Preeta!
+
+https://www.udemy.com/course/product-experimentation-ab-testing-in-r-with-real-examples/
+
+
 
 
 

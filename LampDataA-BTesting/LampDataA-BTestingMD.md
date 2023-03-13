@@ -96,8 +96,24 @@ And there's our sample size.
 
 What this means is, in order to get a fair representation of Decco's user base without reaching all of their users, we need to reach at least 1896 users. Making good progress!
 
+![image](https://user-images.githubusercontent.com/14934475/224825638-9751b3a4-0534-4471-b97d-0b988af20370.png)
 
+### Understanding the data
 
+```
+getwd()
+setwd("~/Downloads")
+
+ABdf = read.csv("_AB_Test_Data.csv")
+
+str(ABdf)
+```
+
+![image](https://user-images.githubusercontent.com/14934475/224827288-f5f0df53-be81-411d-aa64-2bbe72363289.png)
+
+The str function allows me to quick look over the data and summarise it mentally. A quick data check is good practice, for example I can see that users who have no transactions also have an NA value for purchase value. 
+
+![image](https://user-images.githubusercontent.com/14934475/224827596-d301a3bc-3258-47e3-9df3-a9ae6e295382.png)
 
 
 

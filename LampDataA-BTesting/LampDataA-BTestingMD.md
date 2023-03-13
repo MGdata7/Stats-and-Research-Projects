@@ -77,11 +77,11 @@ Those two prior lines are the building blocks for specifying our variant:
 
 ![image](https://user-images.githubusercontent.com/14934475/224824110-a4dff0ef-56f5-4973-ae50-8b91623e9f78.png)
 
-Next we'll specify the effect size we're interested in, or how much of an impact we need our results to make to be of interest:
+Next I'll specify the effect size I'm interested in, or how much of an impact I need the results to make to be of interest:
 
 ![image](https://user-images.githubusercontent.com/14934475/224824256-c0f91915-ec28-48f8-a714-b179c5820a5f.png)
 
-And finally we'll plug it all into a line of code which we'll run to show us our sample size, inclusive of all the above as well as signficance level (just going with a good ol' < .05).
+And finally I'll plug it all into a line of code which we'll run to show us our sample size, inclusive of all the above as well as signficance level (just going with a good ol' < .05).
 
 ![image](https://user-images.githubusercontent.com/14934475/224824610-b522564c-2da2-4dc0-81ba-720e869f2efb.png)
 
@@ -115,13 +115,13 @@ The str function allows me to quick look over the data and summarise it mentally
 
 ![image](https://user-images.githubusercontent.com/14934475/224827596-d301a3bc-3258-47e3-9df3-a9ae6e295382.png)
 
-We can double check that that is the case with more than 5 instances by opening the dataframe:
+I can double check that that is the case with more than 5 instances by opening the dataframe:
 
 ![image](https://user-images.githubusercontent.com/14934475/224829036-a0187107-dc11-4c70-8a73-dcaa26eef99e.png)
 
 Seems fine.
 
-Let's examine our variables of interest. 
+I'll examine our variables of interest. 
 
 >Treatment indicator - allocation
 
@@ -177,6 +177,149 @@ ABdf %>% ggplot(aes(x = purchase_value)) +
   scale_fill_manual(values=c("#69b3a2", "#404080")) +
   labs(fill="")
  ```
+ 
+ ![image](https://user-images.githubusercontent.com/14934475/224831321-fcac3ccc-4f89-4a57-b45e-2895c4b3b400.png)
+
+Above is our purchase value distribution. It looks nice and normal, and the mean is around 300, which is true to our summary stats above.
+
+The next bit of ggplot2 code will find the density plot.
+
+```
+ABdf %>% ggplot(aes(x = purchase_value)) +  
+  geom_density( color="#E69F00")
+
+```
+
+![image](https://user-images.githubusercontent.com/14934475/224831616-2cba7e5c-6d58-4efb-9c51-72c1ca2fb350.png)
+
+This distribution is not surprising as we saw it in the histogram, but it's good to be thorough.
+
+Let's have a look at the time series app use data.
+
+```
+ABdf %>% ggplot(aes(x = days_since)) +  
+  geom_histogram( color="#e9ecef", fill = "#56B4E9", alpha=0.6, position = 'identity') +
+  scale_fill_manual(values=c("#69b3a2", "#404080")) +
+  labs(fill="")
+```
+![image](https://user-images.githubusercontent.com/14934475/224832050-1b82e990-f4ef-4b5b-9464-929e8ad6488b.png)
+
+It looks like there have been a few peaks in activity. Around 320 days back and 60 days back, it seems that there were peaks in user activity. It's possible that Decco ran promotions during this time. This is worth investigating as part of the data picture.
+
+![image](https://user-images.githubusercontent.com/14934475/224832683-eafa1d6f-7423-4bbf-83a8-19100e2b48c3.png)
+
+And here's the density plot.
+
+```
+ABdf %>% ggplot(aes(x = days_since)) +  
+  geom_density( color="#56B4E9")
+ ```
+
+![image](https://user-images.githubusercontent.com/14934475/224832875-50d23545-8658-4c89-93bc-b82f6b25967d.png)
+
+### Categorical Variable Stats
+
+I'm curious what the categorical variables look like - we only have one, allocation.
+
+```
+table(ABdf$allocation)
+
+```
+
+![image](https://user-images.githubusercontent.com/14934475/224833311-bb9ff537-8e30-4c73-b3d3-1e9b736e82f9.png)
+
+That looks about right.
+
+### Verify Randomisation
+
+We'll want to check next if the randomisation was done correctly. Randomisation is used to select the samples for the two variations - not just the "how many", but the "whom". We want a nice variety of participant behaviours. We can check that by taking some baseline variables and seeing how they are distributed between the treatment and control. If the distribution between each group is similar, it's fair to expect that the randomisation was done correctly.
+
+This next line of code will compare means between variables across both groups.
+
+```
+ABdf %>% group_by(allocation) %>% summarise(mean(active_6m), mean(days_since))
+```
+
+![image](https://user-images.githubusercontent.com/14934475/224834006-d9e0f255-703a-4237-9e1b-4200f2517424.png)
+
+![image](https://user-images.githubusercontent.com/14934475/224834599-3b51e4b8-7400-4135-a5ba-25387b025bd2.png)
+
+The means in control and treatment for both variables are exactly the same; this is good because it shows that the randomisation was likely done correctly, lending validity to our study. We can get a bit more thorough with this check by testing not just for means, but for distributions of the variables across the two groups. We'll use more visualisations to help us make sense of those data.
+
+```
+ABdf %>% ggplot(aes(x = days_since, fill = allocation)) +  
+  geom_histogram( color="#e9ecef", alpha=0.6, position = 'identity') +
+  scale_fill_manual(values=c("#69b3a2", "#404080")) +
+  labs(fill="")
+```
+![image](https://user-images.githubusercontent.com/14934475/224835104-12ae215d-2b36-44f2-8c0a-ab4df1c5f9d9.png)
+
+We can see that the distributions are almost completely identical, which is great. Randomisation has most likely been done correctly.
+
+### Main Analysis
+
+I'm ready for the final analysis to see if the treatment outperforms the control. I'll revisit my hypothesis.
+
+Hypothesis:
+
+>If we send an 
+>in-app notification with a promotional offer for Lamps, then the percent of users that purchase 
+>from the Lamp Category will increase. 
+
+Null hypothesis:
+
+>If we send an in-app notification with a promotional offer for Lamps, the percent of users that purchase 
+>from the Lamp Category will not change.
+
+Like so much of stats, it comes down to a means test.
+
+![image](https://user-images.githubusercontent.com/14934475/224835995-6e51007f-a418-45d0-9898-91a525c4fa44.png)
+
+```
+ABdf %>% group_by(allocation) %>% summarise(mean(addtocart_flag), mean(transaction_flag), 
+                                              mean(purchase_value, na.rm = TRUE))
+```
+
+![image](https://user-images.githubusercontent.com/14934475/224836212-b381c28b-a81f-4414-b823-ff29dc637cfa.png)
+
+![image](https://user-images.githubusercontent.com/14934475/224836603-0c750869-1598-4bf4-8a33-66025ffa48a6.png)
+
+Well, maybe not yet. But these are early promising signs. It looks like in all variables, the treatment is outperforming the control. This means that where Decco sent notifications offering a 10 euro discount for Lamps category app clickthrough sales. Here are some key trends:
+
+>Cart-adding was around 24% in control and 28% in treatment
+
+>Purchase percentage was around 10% in control and around 18% in treatment
+
+>Purchase values were an average of 272 euro in control and 323 euro in treatment. 
+
+Those are good preliminary results, but I still need to check for statistical significance. We'll run a crosstabulation using prop.test.
+
+```
+prop.test(xtabs(~ allocation + transaction_flag, data = ABdf)[,2:1])
+```
+
+Reading the results, we can see that the p-value is really small, and the confidence interval does not contain zero. These are good signs and they mean our results are significant.
+
+![image](https://user-images.githubusercontent.com/14934475/224837879-2f5ab17f-5298-4e5f-b6bc-0098b76f1c6c.png)
+
+
+So we saw increases in sales, that's wonderful. However, I also want to compare to uninstalls to make sure the business isn't losing too many valuable customers.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

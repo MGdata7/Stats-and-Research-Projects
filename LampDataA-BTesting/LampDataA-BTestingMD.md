@@ -341,9 +341,9 @@ prop.test(xtabs(~ allocation + uninstall_flag, data = ABdf)[,2:1])
 
 ![image](https://user-images.githubusercontent.com/14934475/224840063-d53f5f1e-969f-43fa-b16b-e51dfa55bb0a.png)
 
-That's a low p-value. It's not looking so good for the treatment, all of a sudden.
+That's a low p-value. It's not looking so good for the treatment, all of a sudden. I'll need to adjust my conclusion.
 
-**While the test is driving up percentage of purchases and purchase value, it is also driving up the uninstalls. And based on the guidance at the beginning, we have a constraint that we cannot have the uninstalls going up. Therefore, in this case we will not implement the change, even though the treatment outperformed the control for the respond variables.
+**While the test is driving up percentage of purchases and purchase value, it is also driving up the uninstalls. And based on the guidance at the beginning, we have a constraint that we cannot have the uninstalls going up. Therefore, in this case we will not implement the change, even though the treatment outperformed the control for the respond variables.**
 
 What I have done here as a data analyst is damage control and preventative advice: I have analysed the data to advise on the risk of implementing a proposed business strategy to the entire user base. Minimal setbacks have happened in terms of user retention and new strategies to drive Lamps sales can be formed based on these data insights.
 

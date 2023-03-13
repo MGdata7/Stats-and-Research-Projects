@@ -115,5 +115,69 @@ The str function allows me to quick look over the data and summarise it mentally
 
 ![image](https://user-images.githubusercontent.com/14934475/224827596-d301a3bc-3258-47e3-9df3-a9ae6e295382.png)
 
+We can double check that that is the case with more than 5 instances by opening the dataframe:
+
+![image](https://user-images.githubusercontent.com/14934475/224829036-a0187107-dc11-4c70-8a73-dcaa26eef99e.png)
+
+Seems fine.
+
+Let's examine our variables of interest. 
+
+>Treatment indicator - allocation
+
+(This is whether the user is experiencing the A or B version of the test)
+
+>Response variables - addtocart_flag, transaction_flag, purchase_value
+
+(These are the sales behaviours the stakeholder is so interested in)
+
+>Baseline variables - active_6m, days_since 
+
+(This is whether the user was active on the app in the last 6 months, and how many days since they have been active)
+
+>Other - uninstall_flag
+
+(This is the uninstall behaviour the stakeholder is trying to prevent or reduce while driving sales)
+
+```
+summary(ABdf[,c("active_6m", "addtocart_flag","transaction_flag", "uninstall_flag", 
+              "purchase_value", "days_since")])
+             
+```
+
+Here are those summary stats:
+
+![image](https://user-images.githubusercontent.com/14934475/224830068-7b518a83-7a0a-4ba4-857e-114ac148d0aa.png)
+
+Here are some customer behaviour insights we can draw from those stats:
+
+> 75% of users have been active on the app in the last 6 months
+
+> 25.63% of users added an item from the Lamps category to their cart
+
+> 14% of users have purchased from the Lamps category
+
+> There were 4% uninstall rates while the test was running
+
+> Average purchase value was 304.6 euro
+
+### Visualisation via Charts and Plots
+
+I could use some visuals to help myself and the stakeholder understand the distribution of the data. It's easier to make sense of pictures. I'll visualise the continous variables using histograms and scatterplots. I'll need the ggplot2 R package for this.
+
+```
+install.packages("ggplot2")
+library(ggplot2)
+library(dplyr)
+```
+
+```
+ABdf %>% ggplot(aes(x = purchase_value)) +  
+  geom_histogram( color="#e9ecef", fill = "#E69F00", alpha=0.6, position = 'identity') +
+  scale_fill_manual(values=c("#69b3a2", "#404080")) +
+  labs(fill="")
+ ```
+
+
 
 

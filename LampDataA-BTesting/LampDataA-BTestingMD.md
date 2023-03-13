@@ -1,5 +1,5 @@
 # A/B Testing Project
-## Using Lamp Purchase Mobile Application Data
+## Using Home Decor Marketing Data
 
 ![image](https://user-images.githubusercontent.com/14934475/224817007-9265d831-fd33-42c1-8c24-dfecd794abee.png)
 

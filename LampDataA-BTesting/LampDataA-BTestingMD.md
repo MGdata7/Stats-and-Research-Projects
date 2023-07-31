@@ -349,9 +349,7 @@ What I have done here as a data analyst is damage control and preventative advic
 
 ![image](https://user-images.githubusercontent.com/14934475/224841566-f3e89e33-d13c-4393-9d1c-404a8f7f25ba.png)
 
-This is the capstone project from a Udemy course by Preeti Semwal. While I have the foundational understanding in statistics, experimental design, and R programming to do the project without prior study, Preeta's design of this project is all her own. I highly recommend checking out her Udemy course if you are in need of the other fundamentals surrounding A/B testing or want to try the project on your own. Thanks Preeti!
 
-https://www.udemy.com/course/product-experimentation-ab-testing-in-r-with-real-examples/
 
 
 
